@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+
+option go_package = "user/api/user/v1;v1";
+
+service UserService {
+  rpc UpdateUser (UpdateUserReq) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch: "/user/{id}",
+      body: "*",
+    };
+  }
+}
+
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string role = 4;
+}
+
+message UpdateUserReq {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string role = 4;
+}
+

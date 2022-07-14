@@ -3,15 +3,13 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
-    description: The greeting service definition.
+    title: ""
     version: 0.0.1
 paths:
     /helloworld/{name}:
         get:
             tags:
                 - Greeter
-                - subgroup
             description: Sends a greeting
             operationId: Greeter_SayHello
             parameters:
@@ -27,6 +25,27 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/helloworld.v1.HelloReply'
+    /user/{id}:
+        patch:
+            tags:
+                - UserService
+            operationId: UserService_UpdateUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.UpdateUserReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
 components:
     schemas:
         helloworld.v1.HelloReply:
@@ -35,5 +54,18 @@ components:
                 message:
                     type: string
             description: The response message containing the greetings
+        user.v1.UpdateUserReq:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                email:
+                    type: string
+                role:
+                    type: string
 tags:
     - name: Greeter
+      description: The greeting service definition.
+    - name: UserService
