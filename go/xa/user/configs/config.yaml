@@ -7,9 +7,5 @@ server:
     timeout: 1s
 data:
   database:
-    mysqldsn: mysql
-    pgsqldsn: root:root@tcp(127.0.0.1:3306)/test
-  redis:
-    addr: 127.0.0.1:6379
-    read_timeout: 0.2s
-    write_timeout: 0.2s
+    mysqldsn: root:abc123456@tcp(127.0.0.1:3306)/xa_user?charset=utf8mb4&parseTime=True&loc=Local
+    pgsqldsn: host=localhost user=postgres password=abc123456 dbname=xa_user port=9920 sslmode=disable TimeZone=Asia/Shanghai

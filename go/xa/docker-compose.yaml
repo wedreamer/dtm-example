@@ -31,6 +31,16 @@ services:
       - ./mysql/config:/etc/mysql/conf.d
     networks:
       - dtm
+  postgres:
+    image: postgres:latest
+    container_name: postgres-test
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: abc123456
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgsql/data:/var/lib/postgresql/data
 networks: 
     dtm: 
         driver: bridge
