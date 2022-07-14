@@ -49,3 +49,16 @@ docker build -t <your-docker-image-name> .
 docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf <your-docker-image-name>
 ```
 
+## 描述
+
+更新一个用户, 该用户的权限信息和基本信息的存储并不在一个数据库中
+
+```go
+struct User {
+    ID int64
+    Name string
+    Email string
+    Role string
+}
+```
+

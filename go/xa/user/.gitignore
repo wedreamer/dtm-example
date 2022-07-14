@@ -31,6 +31,8 @@ Thumbs.db
 bin/
 
 # Develop tools
-.vscode/
 .idea/
 *.swp
+
+# .pb 文件删除
+*.pb.go
