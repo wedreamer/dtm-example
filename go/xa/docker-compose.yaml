@@ -1,0 +1,36 @@
+version: '3'
+services:
+  dtm:
+    image: yedf/dtm
+    links:
+      - mysql
+    environment:
+      STORE_DRIVER: mysql
+      STORE_HOST: mysql
+      STORE_USER: root
+      STORE_PASSWORD: abc123456
+      STORE_PORT: 3306
+    ports:
+      - '36789:36789'
+      - '36790:36790'
+    networks:
+      - dtm
+  mysql:
+    container_name: mysql-dtm
+    image: mysql:8.0.23
+    command: --lower-case-table-names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123456
+      TZ: Asia/Shanghai
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/config:/etc/mysql/conf.d
+    networks:
+      - dtm
+networks: 
+    dtm: 
+        driver: bridge
