@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"user/internal/data/entity"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -20,8 +21,7 @@ type UserFields struct {
 }
 
 type UserRepo interface {
-	UpdateUserRole(ctx context.Context, id string, role string) error
-	UpdateFields(ctx context.Context, id string, userFields *UserFields) error
+	UpdateUser(ctx context.Context, id string, user *entity.User) error
 }
 
 type UserUsecase struct {
@@ -36,25 +36,12 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 func (uc *UserUsecase) UpdateUser(ctx context.Context, newUser *User) error {
 	uc.log.WithContext(ctx).Infof("update user id: %v", newUser.Id)
 
-	newRole := newUser.Role
+	err := uc.repo.UpdateUser(ctx, newUser.Id, NewUserPo(newUser).ToPo())
 
-	if newRole != "" {
-		err := uc.repo.UpdateUserRole(ctx, newUser.Id, newRole)
-		if err != nil {
-			return err
-		}
-		err = uc.repo.UpdateFields(ctx, newUser.Id, &UserFields{
-			Id: newUser.Id,
-			Name: newUser.Name,
-			Email: newUser.Email,
-		})
-		return err
-	} else {
-		err := uc.repo.UpdateFields(ctx, newUser.Id, &UserFields{
-			Id: newUser.Id,
-			Name: newUser.Name,
-			Email: newUser.Email,
-		})
+	if err != nil {
+		uc.log.WithContext(ctx).Errorf("update user id: %v, err: %v", newUser.Id, err)
 		return err
 	}
+
+	return nil
 }
