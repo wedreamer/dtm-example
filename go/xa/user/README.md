@@ -1,5 +1,18 @@
 # Kratos Project Template
 
+## 描述
+
+更新一个用户, 该用户的权限信息和基本信息的存储并不在一个数据库中, 其中 user 与 role 的关系存放在 pgsql 中, 而 user 的其他字段存放 mysql 中.
+
+```go
+struct User {
+    ID int64  // mysql
+    Name string  // mysql
+    Email string // mysql
+    Role string // -> pgsql
+}
+```
+
 ## Install Kratos
 ```
 go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
@@ -47,18 +60,5 @@ docker build -t <your-docker-image-name> .
 
 # run
 docker run --rm -p 8000:8000 -p 9000:9000 -v </path/to/your/configs>:/data/conf <your-docker-image-name>
-```
-
-## 描述
-
-更新一个用户, 该用户的权限信息和基本信息的存储并不在一个数据库中, 其中 user 与 role 的关系存放在 pgsql 中, 而 user 的其他字段存放 mysql 中.
-
-```go
-struct User {
-    ID int64  // mysql
-    Name string  // mysql
-    Email string // mysql
-    Role string // -> pgsql
-}
 ```
 
