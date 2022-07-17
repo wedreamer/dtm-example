@@ -2,8 +2,10 @@ package data
 
 import (
 	"context"
+	"database/sql"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/dtm-labs/dtmcli"
 
 	"user/internal/biz"
 	"user/internal/data/entity"
@@ -50,7 +52,27 @@ func (r *userRepo) UpdateUser(ctx context.Context, id string, user *entity.User)
 		if err != nil {
 			return err
 		}
-		xid := r.data.NewXid()
+		// use dtm XA
+		gid := r.data.GenXid()
+		pgXaInfo := &LocalTransactionInfo{
+			DbType: PGSQL,
+			CallBack: func(db *sql.DB, xa *dtmcli.Xa) error {
+				_, err := db.Exec(pgsqlStr)
+				return err
+			},
+		}
+		mysqlXaInfo := &LocalTransactionInfo{
+			DbType: MYSQL,
+			CallBack: func(db *sql.DB, xa *dtmcli.Xa) error {
+				_, err := db.Exec(mysqlStr)
+				return err
+			},
+		}
+		err = r.data.StartXa(gid, []*LocalTransactionInfo{pgXaInfo, mysqlXaInfo})
+		if err != nil {
+			return err
+		}
+		/* xid := r.data.NewXid()
 		pgXa := &XA{}
 		pgXa.SetXId(xid)
 		pgXa.SetSql(pgsqlStr, PGSQL)
@@ -59,11 +81,11 @@ func (r *userRepo) UpdateUser(ctx context.Context, id string, user *entity.User)
 		mysqlXa.SetXId(xid)
 		mysqlXa.SetSql(mysqlStr, MYSQL)
 		mysqlXa.Init(r.data.MysqlDb, MYSQL)
-		xas := [] *XA{ pgXa, mysqlXa }
+		xas := []*XA{pgXa, mysqlXa}
 		err = r.data.Run(xas)
 		if err != nil {
 			return err
-		}
+		} */
 	}
 	return nil
 }

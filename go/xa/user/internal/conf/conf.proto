@@ -29,6 +29,14 @@ message Data {
   message Database {
     string mysqldsn = 1;
     string pgsqldsn = 2;
+
+    message DtmServer {
+      string host = 1;
+      int32 port = 2;
+      string busiApi = 3;
+    }
+
+    DtmServer dtmServer = 3;
   }
   Database database = 1;
 }
